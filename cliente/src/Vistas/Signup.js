@@ -3,6 +3,19 @@ import Main from '../Componentes/Main';
 import imagenSignup from '../imagenes/signup.png';
 
 export default function Signup() {
+  const usuario = {
+    email: '',
+    username: '',
+    password: '',
+    bio: '',
+    nombre: ''
+  };
+
+  function handleInputChange(e) {
+    usuario[e.target.name] = e.target.value;
+    console.log(usuario);
+  }
+
   return (
     <Main center={true}>
       <div className="Signup">
@@ -19,6 +32,7 @@ export default function Signup() {
               placeholder="Email"
               className="Form__field"
               required
+              onChange={handleInputChange}
             />
             <input
               type="text"
@@ -28,6 +42,7 @@ export default function Signup() {
               required
               minLength="3"
               maxLength="100"
+              onChange={handleInputChange}
             />
             <input
               type="text"
@@ -37,6 +52,7 @@ export default function Signup() {
               required
               minLength="3"
               maxLength="30"
+              onChange={handleInputChange}
             />
             <input
               type="text"
@@ -45,6 +61,7 @@ export default function Signup() {
               className="Form__field"
               required
               maxLength="150"
+              onChange={handleInputChange}
             />
             <input
               type="password"
@@ -52,6 +69,7 @@ export default function Signup() {
               placeholder="Contraseña"
               className="Form__field"
               required
+              onChange={handleInputChange}
             />
             <button className="Form__submit" type="submit">
               Sign up
