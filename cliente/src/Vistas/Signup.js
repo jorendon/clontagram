@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Axios from 'axios';
 import Main from '../Componentes/Main';
 import imagenSignup from '../imagenes/signup.png';
 
@@ -18,6 +19,17 @@ export default function Signup() {
     });
   }
 
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    try {
+      const { data } = await Axios.post('/api/usuarios/signup', usuario);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <Main center={true}>
       <div className="Signup">
@@ -27,7 +39,7 @@ export default function Signup() {
           <p className="FormContainer__info">
             Regístrate para que veas el clon de Instagram
           </p>
-          <form>
+          <form onSubmit={handleSubmit}>
             <input
               type="email"
               name="email"
