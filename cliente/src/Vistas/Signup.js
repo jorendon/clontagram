@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Axios from 'axios';
 import Main from '../Componentes/Main';
 import imagenSignup from '../imagenes/signup.png';
 
