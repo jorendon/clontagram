@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Axios from 'axios';
 
 import {
@@ -68,11 +69,24 @@ export default function App() {
   }
 
   return (
-    <div className="ContenedorTemporal">
+    <Router>
       <Nav />
-      {/* <Signup signup={signup} /> */}
-      <Login login={login} />
+      <LogoutRoutes login={login} signup={signup} />
       <div>{JSON.stringify(usuario)}</div>
-    </div>
+    </Router>
+  );
+}
+
+function LoginRoutes() {}
+
+function LogoutRoutes({ login, signup }) {
+  return (
+    <Switch>
+      <Route
+        path="/login/"
+        render={props => <Login {...props} login={login} />}
+      />
+      <Route render={props => <Signup {...props} signup={signup} />} default />
+    </Switch>
   );
 }
