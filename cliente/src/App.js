@@ -71,13 +71,30 @@ export default function App() {
   return (
     <Router>
       <Nav />
-      <LogoutRoutes login={login} signup={signup} />
-      <div>{JSON.stringify(usuario)}</div>
+      {usuario ? (
+        <LoginRoutes />
+      ) : (
+        <LogoutRoutes login={login} signup={signup} />
+      )}
     </Router>
   );
 }
 
-function LoginRoutes() {}
+function LoginRoutes() {
+  return (
+    <Switch>
+      <Route
+        path="/"
+        component={() => (
+          <Main center>
+            <h1>Soy el feed</h1>
+          </Main>
+        )}
+        default
+      />
+    </Switch>
+  );
+}
 
 function LogoutRoutes({ login, signup }) {
   return (
