@@ -5,9 +5,30 @@ import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import Loading from '../Componentes/Loading';
 import Axios from 'axios';
 
-export default function Upload() {
+export default function Upload({ mostrarError }) {
   const [imagenUrl, setImagenUrl] = useState('');
   const [subiendoImagen, setSubiendoImagen] = useState(false);
+
+  async function handleImagenSeleccionada(evento) {
+    try {
+      setSubiendoImagen(true);
+      const file = evento.target.files[0];
+
+      const config = {
+        headers: {
+          'Content-Type': file.type
+        }
+      };
+
+      const { data } = await Axios.post('/api/posts/upload', file, config);
+      setImagenUrl(data.url);
+      setSubiendoImagen(false);
+    } catch (error) {
+      setSubiendoImagen(false);
+      mostrarError(error.response.data);
+      console.log(error);
+    }
+  }
 
   return (
     <Main center>
@@ -17,6 +38,7 @@ export default function Upload() {
             <SeccionSubirImagen
               imagenUrl={imagenUrl}
               subiendoImagen={subiendoImagen}
+              handleImagenSeleccionada={handleImagenSeleccionada}
             />
           </div>
           <textarea
@@ -35,7 +57,11 @@ export default function Upload() {
   );
 }
 
-function SeccionSubirImagen({ subiendoImagen, imagenUrl }) {
+function SeccionSubirImagen({
+  subiendoImagen,
+  imagenUrl,
+  handleImagenSeleccionada
+}) {
   if (subiendoImagen) {
     return <Loading />;
   } else if (imagenUrl) {
@@ -45,7 +71,12 @@ function SeccionSubirImagen({ subiendoImagen, imagenUrl }) {
       <label className="Upload__image-label">
         <FontAwesomeIcon icon={faUpload} />
         <span>Publica una foto</span>
-        <input type="file" className="hidden" name="imagen" />
+        <input
+          type="file"
+          className="hidden"
+          name="imagen"
+          onChange={handleImagenSeleccionada}
+        />
       </label>
     );
   }
