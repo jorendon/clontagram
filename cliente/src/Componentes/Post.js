@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Avatar from './Avatar';
 
 export default function Post({ post, actualizarPost }) {
   const {
@@ -14,6 +15,7 @@ export default function Post({ post, actualizarPost }) {
 
   return (
     <div className="Post-Componente">
+      <Avatar usuario={usuario} />
       <img src={url} alt={caption} className="Post-Componente__img" />
     </div>
   );
