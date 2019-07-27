@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Axios from 'axios';
 import Main from '../Componentes/Main';
 import Loading from '../Componentes/Loading';
+import Post from '../Componentes/Post';
 
 async function cargarPosts(fechaDelUltimoPost) {
   const query = fechaDelUltimoPost ? `?fecha=${fechaDelUltimoPost}` : '';
@@ -49,7 +50,11 @@ export default function Feed({ mostrarError }) {
 
   return (
     <Main center>
-      <div>{JSON.stringify(posts)}</div>
+      <div className="Feed">
+        {posts.map(post => (
+          <Post key={post._id} post={post} />
+        ))}
+      </div>
     </Main>
   );
 }
