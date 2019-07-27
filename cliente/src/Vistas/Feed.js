@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Axios from 'axios';
 import Main from '../Componentes/Main';
 import Loading from '../Componentes/Loading';
@@ -30,9 +31,41 @@ export default function Feed({ mostrarError }) {
     cargarPostsIniciales();
   }, []);
 
+  if (cargandoPostIniciales) {
+    return (
+      <Main center>
+        <Loading />
+      </Main>
+    );
+  }
+
+  if (!cargandoPostIniciales && posts.length === 0) {
+    return (
+      <Main center>
+        <NoSiguesANadie />
+      </Main>
+    );
+  }
+
   return (
     <Main center>
       <div>{JSON.stringify(posts)}</div>
     </Main>
+  );
+}
+
+function NoSiguesANadie() {
+  return (
+    <div className="NoSiguesANadie">
+      <p className="NoSiguesANadie__mensaje">
+        Tu feed no tiene fotos porque no sigues a nadie, o porque no han
+        publicado fotos.
+      </p>
+      <div className="text-center">
+        <Link to="/explore" className="NoSiguesANadie__boton">
+          Explora Clontagram
+        </Link>
+      </div>
+    </div>
   );
 }
