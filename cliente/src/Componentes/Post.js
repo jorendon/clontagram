@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Avatar from './Avatar';
 import BotonLike from './BotonLike';
+import Comentar from './Comentar';
 
 export default function Post({ post, actualizarPost }) {
   const {
@@ -36,6 +37,7 @@ export default function Post({ post, actualizarPost }) {
           <Comentarios comentarios={comentarios} />
         </ul>
       </div>
+      <Comentar />
     </div>
   );
 }
