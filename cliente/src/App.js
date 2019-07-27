@@ -15,6 +15,7 @@ import Error from './Componentes/Error';
 import Signup from './Vistas/Signup';
 import Login from './Vistas/Login';
 import Upload from './Vistas/Upload';
+import Feed from './Vistas/Feed';
 import Main from './Componentes/Main';
 
 initAxiosInterceptors();
@@ -103,13 +104,10 @@ function LoginRoutes({ mostrarError }) {
         path="/upload"
         render={props => <Upload {...props} mostrarError={mostrarError} />}
       />
+
       <Route
         path="/"
-        component={() => (
-          <Main center>
-            <h1>Soy el feed</h1>
-          </Main>
-        )}
+        render={props => <Feed {...props} mostrarError={mostrarError} />}
         default
       />
     </Switch>
