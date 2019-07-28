@@ -32,6 +32,19 @@ export default function Feed({ mostrarError }) {
     cargarPostsIniciales();
   }, []);
 
+  function actualizarPost(postOriginal, postActualizado) {
+    setPosts(posts => {
+      const postsActualizados = posts.map(post => {
+        if (post !== postOriginal) {
+          return post;
+        }
+
+        return postActualizado;
+      });
+      return postsActualizados;
+    });
+  }
+
   if (cargandoPostIniciales) {
     return (
       <Main center>
@@ -52,7 +65,12 @@ export default function Feed({ mostrarError }) {
     <Main center>
       <div className="Feed">
         {posts.map(post => (
-          <Post key={post._id} post={post} />
+          <Post
+            key={post._id}
+            post={post}
+            actualizarPost={actualizarPost}
+            mostrarError={mostrarError}
+          />
         ))}
       </div>
     </Main>
