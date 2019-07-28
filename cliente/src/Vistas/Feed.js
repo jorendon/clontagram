@@ -12,9 +12,13 @@ async function cargarPosts(fechaDelUltimoPost) {
   return nuevosPosts;
 }
 
+const NUMERO_DE_POSTS_POR_LLAMADA = 3;
+
 export default function Feed({ mostrarError, usuario }) {
   const [posts, setPosts] = useState([]);
   const [cargandoPostIniciales, setCargandoPostIniciales] = useState(true);
+  const [cargandoMasPosts, setCargandoMasPosts] = useState(false);
+  const [todosLosPostsCargados, setTodosLosPostsCargados] = useState(false);
 
   useEffect(() => {
     async function cargarPostsIniciales() {
@@ -23,6 +27,7 @@ export default function Feed({ mostrarError, usuario }) {
         setPosts(nuevosPosts);
         console.log(nuevosPosts);
         setCargandoPostIniciales(false);
+        revisarSiHayMasPosts(nuevosPosts);
       } catch (error) {
         mostrarError('Hubo un problema cargando tu feed.');
         console.log(error);
@@ -43,6 +48,30 @@ export default function Feed({ mostrarError, usuario }) {
       });
       return postsActualizados;
     });
+  }
+
+  async function cargarMasPosts() {
+    if (cargandoMasPosts) {
+      return;
+    }
+
+    try {
+      setCargandoMasPosts(true);
+      const fechaDelUltimoPost = posts[posts.length - 1].fecha_creado;
+      const nuevosPosts = await cargarPosts(fechaDelUltimoPost);
+      setPosts(viejosPosts => [...viejosPosts, ...nuevosPosts]);
+      setCargandoMasPosts(false);
+      revisarSiHayMasPosts(nuevosPosts);
+    } catch (error) {
+      mostrarError('Hubo un problema cargando los siguientes posts.');
+      setCargandoMasPosts(false);
+    }
+  }
+
+  function revisarSiHayMasPosts(nuevosPosts) {
+    if (nuevosPosts.length < NUMERO_DE_POSTS_POR_LLAMADA) {
+      setTodosLosPostsCargados(true);
+    }
   }
 
   if (cargandoPostIniciales) {
@@ -73,6 +102,10 @@ export default function Feed({ mostrarError, usuario }) {
             usuario={usuario}
           />
         ))}
+        <CargarMasPosts
+          onClick={cargarMasPosts}
+          todosLosPostsCargados={todosLosPostsCargados}
+        />
       </div>
     </Main>
   );
@@ -91,5 +124,17 @@ function NoSiguesANadie() {
         </Link>
       </div>
     </div>
+  );
+}
+
+function CargarMasPosts({ onClick, todosLosPostsCargados }) {
+  if (todosLosPostsCargados) {
+    return <div className="Feed__no-hay-mas-posts">No hay más posts</div>;
+  }
+
+  return (
+    <button className="Feed__cargar-mas" onClick={onClick}>
+      Ver más
+    </button>
   );
 }
