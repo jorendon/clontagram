@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import Avatar from './Avatar';
 import BotonLike from './BotonLike';
 import Comentar from './Comentar';
-import { toggleLike } from '../Helpers/post-helpers';
+import { toggleLike, comentar } from '../Helpers/post-helpers';
 
-export default function Post({ post, actualizarPost, mostrarError }) {
+export default function Post({ post, actualizarPost, mostrarError, usuario }) {
   const {
     numLikes,
     numComentarios,
@@ -13,7 +13,7 @@ export default function Post({ post, actualizarPost, mostrarError }) {
     _id,
     caption,
     url,
-    usuario,
+    usuario: usuarioDelPost,
     estaLike
   } = post;
   const [enviandoLike, setEnviandoLike] = useState(false);
@@ -35,9 +35,14 @@ export default function Post({ post, actualizarPost, mostrarError }) {
     }
   }
 
+  async function onSubmitComentario(mensaje) {
+    const postActualizado = await comentar(post, mensaje, usuario);
+    actualizarPost(post, postActualizado);
+  }
+
   return (
     <div className="Post-Componente">
-      <Avatar usuario={usuario} />
+      <Avatar usuario={usuarioDelPost} />
       <img src={url} alt={caption} className="Post-Componente__img" />
 
       <div className="Post-Componente__acciones">
@@ -47,8 +52,8 @@ export default function Post({ post, actualizarPost, mostrarError }) {
         <p>Liked por {numLikes} personas</p>
         <ul>
           <li>
-            <Link to={`/perfil/${usuario.username}`}>
-              <b>{usuario.username}</b>
+            <Link to={`/perfil/${usuarioDelPost.username}`}>
+              <b>{usuarioDelPost.username}</b>
             </Link>{' '}
             {caption}
           </li>
@@ -56,7 +61,7 @@ export default function Post({ post, actualizarPost, mostrarError }) {
           <Comentarios comentarios={comentarios} />
         </ul>
       </div>
-      <Comentar />
+      <Comentar onSubmitComentario={onSubmitComentario} />
     </div>
   );
 }

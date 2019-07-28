@@ -12,7 +12,7 @@ async function cargarPosts(fechaDelUltimoPost) {
   return nuevosPosts;
 }
 
-export default function Feed({ mostrarError }) {
+export default function Feed({ mostrarError, usuario }) {
   const [posts, setPosts] = useState([]);
   const [cargandoPostIniciales, setCargandoPostIniciales] = useState(true);
 
@@ -70,6 +70,7 @@ export default function Feed({ mostrarError }) {
             post={post}
             actualizarPost={actualizarPost}
             mostrarError={mostrarError}
+            usuario={usuario}
           />
         ))}
       </div>
