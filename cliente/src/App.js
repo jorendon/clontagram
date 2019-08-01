@@ -107,7 +107,9 @@ function LoginRoutes({ mostrarError, usuario }) {
       />
       <Route
         path="/post/:id"
-        render={props => <Post {...props} mostrarError={mostrarError} />}
+        render={props => (
+          <Post {...props} mostrarError={mostrarError} usuario={usuario} />
+        )}
       />
 
       <Route
