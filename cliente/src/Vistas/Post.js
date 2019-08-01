@@ -8,7 +8,7 @@ import RecursoNoExiste from '../Componentes/RecursoNoExiste';
 import { Link } from 'react-router-dom';
 import Axios from 'axios';
 
-export default function Post({ mostrarError, match }) {
+export default function PostVista({ mostrarError, match }) {
   const postId = match.params.id;
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -56,7 +56,67 @@ export default function Post({ mostrarError, match }) {
 
   return (
     <Main center>
-      <h1>Soy el Post</h1>
+      <Post {...post} />
     </Main>
+  );
+}
+
+function Post({
+  comentarios,
+  caption,
+  url,
+  usuario,
+  estaLike,
+  onSubmitLike,
+  onSubmitComentario
+}) {
+  return (
+    <div className="Post">
+      <div className="Post__image-container">
+        <img src={url} alt={caption} />
+      </div>
+      <div className="Post__side-bar">
+        <Avatar usuario={usuario} />
+
+        <div className="Post__comentarios-y-like">
+          <Comentarios
+            usuario={usuario}
+            caption={caption}
+            comentarios={comentarios}
+          />
+          <div className="Post__like">
+            <BotonLike onSubmitLike={onSubmitLike} like={estaLike} />
+          </div>
+          <Comentar onSubmitComentario={onSubmitComentario} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Comentarios({ usuario, caption, comentarios }) {
+  return (
+    <ul className="Post__comentarios">
+      <li className="Post__comentario">
+        <Link
+          to={`/perfil/${usuario.username}`}
+          className="Post__autor-comentario"
+        >
+          <b>{usuario.username}</b>
+        </Link>{' '}
+        {caption}
+      </li>
+      {comentarios.map(comentario => (
+        <li className="Post__comentario" key={comentario._id}>
+          <Link
+            to={`/perfil/${comentario.usuario.username}`}
+            className="Post__autor-comentario"
+          >
+            <b>{comentario.usuario.username}</b>
+          </Link>{' '}
+          {comentario.mensaje}
+        </li>
+      ))}
+    </ul>
   );
 }
