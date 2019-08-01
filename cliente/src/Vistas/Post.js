@@ -4,6 +4,7 @@ import Loading from '../Componentes/Loading';
 import Avatar from '../Componentes/Avatar';
 import Comentar from '../Componentes/Comentar';
 import BotonLike from '../Componentes/BotonLike';
+import RecursoNoExiste from '../Componentes/RecursoNoExiste';
 import { Link } from 'react-router-dom';
 import Axios from 'axios';
 
@@ -41,6 +42,16 @@ export default function Post({ mostrarError, match }) {
         <Loading />
       </Main>
     );
+  }
+
+  if (postNoExiste) {
+    return (
+      <RecursoNoExiste mensaje="El post que estas intentando ver no existe" />
+    );
+  }
+
+  if (post == null) {
+    return null;
   }
 
   return (
