@@ -17,6 +17,7 @@ import Login from './Vistas/Login';
 import Upload from './Vistas/Upload';
 import Feed from './Vistas/Feed';
 import Post from './Vistas/Post';
+import Explore from './Vistas/Explore';
 import Main from './Componentes/Main';
 
 initAxiosInterceptors();
@@ -111,7 +112,10 @@ function LoginRoutes({ mostrarError, usuario }) {
           <Post {...props} mostrarError={mostrarError} usuario={usuario} />
         )}
       />
-
+      <Route
+        path="/explore"
+        render={props => <Explore {...props} mostrarError={mostrarError} />}
+      />
       <Route
         path="/"
         render={props => (
