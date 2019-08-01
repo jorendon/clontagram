@@ -4,6 +4,7 @@ import Loading from '../Componentes/Loading';
 import { ImagenAvatar } from '../Componentes/Avatar';
 import Axios from 'axios';
 import Main from '../Componentes/Main';
+import Grid from '../Componentes/Grid';
 
 export default function Explore({ mostrarError }) {
   const [posts, setPosts] = useState([]);
@@ -54,6 +55,11 @@ export default function Explore({ mostrarError }) {
             );
           })}
         </div>
+      </div>
+
+      <div className="Explore__section">
+        <h2 className="Explore__title">Explorar</h2>
+        <Grid posts={posts} />
       </div>
     </Main>
   );
