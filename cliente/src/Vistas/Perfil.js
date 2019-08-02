@@ -4,6 +4,7 @@ import Loading from '../Componentes/Loading';
 import Grid from '../Componentes/Grid';
 import RecursoNoExiste from '../Componentes/RecursoNoExiste';
 import Axios from 'axios';
+import stringToColor from 'string-to-color';
 
 export default function Perfil({ mostrarError, usuario, match }) {
   const username = match.params.username;
@@ -11,6 +12,7 @@ export default function Perfil({ mostrarError, usuario, match }) {
   const [posts, setPosts] = useState([]);
   const [cargandoPerfil, setCargandoPefil] = useState(true);
   const [perfilNoExiste, setPerfilNoExiste] = useState(false);
+  const [subiendoImagen, setSubiendoImagen] = useState(false);
 
   useEffect(() => {
     async function cargarPostsYUsuario() {
@@ -39,12 +41,84 @@ export default function Perfil({ mostrarError, usuario, match }) {
     cargarPostsYUsuario();
   }, [username]);
 
-  console.log(usuarioDueñoDelPerfil);
-  console.log(posts);
+  function esElPerfilDeLaPersonaLogin() {
+    return usuario._id === usuarioDueñoDelPerfil._id;
+  }
+
+  if (cargandoPerfil) {
+    return (
+      <Main center>
+        <Loading />
+      </Main>
+    );
+  }
+
+  if (perfilNoExiste) {
+    return (
+      <RecursoNoExiste mensaje="El perfil que estas intentando ver no existe" />
+    );
+  }
+
+  if (usuario == null) {
+    return null;
+  }
 
   return (
     <Main>
-      <h2>Este es el perfil de {username}</h2>
+      <div className="Perfil">
+        <ImagenAvatar
+          esElPerfilDeLaPersonaLogin={esElPerfilDeLaPersonaLogin()}
+          usuarioDueñoDelPerfil={usuarioDueñoDelPerfil}
+          handleImagenSeleccionada={() => 1}
+          subiendoImagen={subiendoImagen}
+        />
+      </div>
     </Main>
   );
+}
+
+function ImagenAvatar({
+  esElPerfilDeLaPersonaLogin,
+  usuarioDueñoDelPerfil,
+  handleImagenSeleccionada,
+  subiendoImagen
+}) {
+  let contenido;
+
+  if (subiendoImagen) {
+    contenido = <Loading />;
+  } else if (esElPerfilDeLaPersonaLogin) {
+    contenido = (
+      <label
+        className="Perfil__img-placeholder Perfil__img-placeholder--pointer"
+        style={{
+          backgroundImage: usuarioDueñoDelPerfil.imagen
+            ? `url(${usuarioDueñoDelPerfil.imagen})`
+            : null,
+          backgroundColor: stringToColor(usuarioDueñoDelPerfil.username)
+        }}
+      >
+        <input
+          type="file"
+          onChange={handleImagenSeleccionada}
+          className="hidden"
+          name="imagen"
+        />
+      </label>
+    );
+  } else {
+    contenido = (
+      <div
+        className="Perfil__img-placeholder"
+        style={{
+          backgroundImage: usuarioDueñoDelPerfil.imagen
+            ? `url(${usuarioDueñoDelPerfil.imagen})`
+            : null,
+          backgroundColor: stringToColor(usuarioDueñoDelPerfil.username)
+        }}
+      />
+    );
+  }
+
+  return <div className="Perfil__img-container">{contenido}</div>;
 }
