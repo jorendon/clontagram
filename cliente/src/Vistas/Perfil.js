@@ -6,7 +6,7 @@ import RecursoNoExiste from '../Componentes/RecursoNoExiste';
 import Axios from 'axios';
 import stringToColor from 'string-to-color';
 
-export default function Perfil({ mostrarError, usuario, match }) {
+export default function Perfil({ mostrarError, usuario, match, logout }) {
   const username = match.params.username;
   const [usuarioDueñoDelPerfil, setUsuarioDueñoDelPerfil] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -91,6 +91,18 @@ export default function Perfil({ mostrarError, usuario, match }) {
           handleImagenSeleccionada={handleImagenSeleccionada}
           subiendoImagen={subiendoImagen}
         />
+        <div className="Perfil__bio-container">
+          <div className="Perfil__bio-heading">
+            <h2 className="capitalize">{usuarioDueñoDelPerfil.username}</h2>
+            {!esElPerfilDeLaPersonaLogin() && (
+              <BotonSeguir
+                siguiendo={usuarioDueñoDelPerfil.siguiendo}
+                toggleSiguiendo={() => 1}
+              />
+            )}
+            {esElPerfilDeLaPersonaLogin() && <BotonLogout logout={logout} />}
+          </div>
+        </div>
       </div>
     </Main>
   );
@@ -140,4 +152,20 @@ function ImagenAvatar({
   }
 
   return <div className="Perfil__img-container">{contenido}</div>;
+}
+
+function BotonSeguir({ siguiendo, toggleSiguiendo }) {
+  return (
+    <button onClick={toggleSiguiendo} className="Perfil__boton-seguir">
+      {siguiendo ? 'Dejar de seguir' : 'Seguir'}
+    </button>
+  );
+}
+
+function BotonLogout({ logout }) {
+  return (
+    <button className="Perfil__boton-logout" onClick={logout}>
+      Logout
+    </button>
+  );
 }
