@@ -45,6 +45,25 @@ export default function Perfil({ mostrarError, usuario, match }) {
     return usuario._id === usuarioDueñoDelPerfil._id;
   }
 
+  async function handleImagenSeleccionada(event) {
+    try {
+      setSubiendoImagen(true);
+      const file = event.target.files[0];
+      const config = {
+        headers: {
+          'Content-Type': file.type
+        }
+      };
+      const { data } = await Axios.post('/api/usuarios/upload', file, config);
+      setUsuarioDueñoDelPerfil({ ...usuarioDueñoDelPerfil, imagen: data.url });
+      setSubiendoImagen(false);
+    } catch (error) {
+      mostrarError(error.response.data);
+      setSubiendoImagen(false);
+      console.log(error);
+    }
+  }
+
   if (cargandoPerfil) {
     return (
       <Main center>
@@ -69,7 +88,7 @@ export default function Perfil({ mostrarError, usuario, match }) {
         <ImagenAvatar
           esElPerfilDeLaPersonaLogin={esElPerfilDeLaPersonaLogin()}
           usuarioDueñoDelPerfil={usuarioDueñoDelPerfil}
-          handleImagenSeleccionada={() => 1}
+          handleImagenSeleccionada={handleImagenSeleccionada}
           subiendoImagen={subiendoImagen}
         />
       </div>
