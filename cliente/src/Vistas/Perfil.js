@@ -6,6 +6,7 @@ import RecursoNoExiste from '../Componentes/RecursoNoExiste';
 import Axios from 'axios';
 import stringToColor from 'string-to-color';
 import toggleSiguiendo from '../Helpers/amistad-helpers';
+import useEsMobil from '../Hooks/useEsMobil';
 
 export default function Perfil({ mostrarError, usuario, match, logout }) {
   const username = match.params.username;
@@ -15,6 +16,7 @@ export default function Perfil({ mostrarError, usuario, match, logout }) {
   const [perfilNoExiste, setPerfilNoExiste] = useState(false);
   const [subiendoImagen, setSubiendoImagen] = useState(false);
   const [enviandoAmistad, setEnviandoAmistad] = useState(false);
+  const esMobil = useEsMobil();
 
   useEffect(() => {
     async function cargarPostsYUsuario() {
@@ -123,9 +125,33 @@ export default function Perfil({ mostrarError, usuario, match, logout }) {
             )}
             {esElPerfilDeLaPersonaLogin() && <BotonLogout logout={logout} />}
           </div>
+          {!esMobil && (
+            <DescripcionPerfil usuarioDueñoDelPerfil={usuarioDueñoDelPerfil} />
+          )}
         </div>
       </div>
+      {esMobil && (
+        <DescripcionPerfil usuarioDueñoDelPerfil={usuarioDueñoDelPerfil} />
+      )}
+
+      <div className="Perfil__separador" />
+      {posts.length > 0 ? <Grid posts={posts} /> : <NoHaPosteadoFotos />}
     </Main>
+  );
+}
+
+function DescripcionPerfil({ usuarioDueñoDelPerfil }) {
+  return (
+    <div className="Perfil__descripcion">
+      <h2 className="Perfil__nombre">{usuarioDueñoDelPerfil.nombre}</h2>
+      <p>{usuarioDueñoDelPerfil.bio}</p>
+      <p className="Perfil__estadisticas">
+        <b>{usuarioDueñoDelPerfil.numSiguiendo}</b> following
+        <span className="ml-4">
+          <b>{usuarioDueñoDelPerfil.numSeguidores}</b> followers
+        </span>
+      </p>
+    </div>
   );
 }
 
@@ -189,4 +215,8 @@ function BotonLogout({ logout }) {
       Logout
     </button>
   );
+}
+
+function NoHaPosteadoFotos() {
+  return <p className="text-center">Este usuario no ha poteado fotos.</p>;
 }
