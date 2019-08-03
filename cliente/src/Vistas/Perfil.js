@@ -5,6 +5,7 @@ import Grid from '../Componentes/Grid';
 import RecursoNoExiste from '../Componentes/RecursoNoExiste';
 import Axios from 'axios';
 import stringToColor from 'string-to-color';
+import toggleSiguiendo from '../Helpers/amistad-helpers';
 
 export default function Perfil({ mostrarError, usuario, match, logout }) {
   const username = match.params.username;
@@ -13,6 +14,7 @@ export default function Perfil({ mostrarError, usuario, match, logout }) {
   const [cargandoPerfil, setCargandoPefil] = useState(true);
   const [perfilNoExiste, setPerfilNoExiste] = useState(false);
   const [subiendoImagen, setSubiendoImagen] = useState(false);
+  const [enviandoAmistad, setEnviandoAmistad] = useState(false);
 
   useEffect(() => {
     async function cargarPostsYUsuario() {
@@ -64,6 +66,25 @@ export default function Perfil({ mostrarError, usuario, match, logout }) {
     }
   }
 
+  async function onToggleSiguiendo() {
+    if (enviandoAmistad) {
+      return;
+    }
+
+    try {
+      setEnviandoAmistad(true);
+      const usuarioActualizado = await toggleSiguiendo(usuarioDueñoDelPerfil);
+      setUsuarioDueñoDelPerfil(usuarioActualizado);
+      setEnviandoAmistad(false);
+    } catch (error) {
+      mostrarError(
+        'Hubo un problema siguiendo/dejando de seguir a este usuario. Intenta de nuevo'
+      );
+      setEnviandoAmistad(false);
+      console.log(error);
+    }
+  }
+
   if (cargandoPerfil) {
     return (
       <Main center>
@@ -97,7 +118,7 @@ export default function Perfil({ mostrarError, usuario, match, logout }) {
             {!esElPerfilDeLaPersonaLogin() && (
               <BotonSeguir
                 siguiendo={usuarioDueñoDelPerfil.siguiendo}
-                toggleSiguiendo={() => 1}
+                toggleSiguiendo={onToggleSiguiendo}
               />
             )}
             {esElPerfilDeLaPersonaLogin() && <BotonLogout logout={logout} />}
